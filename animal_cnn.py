@@ -1,9 +1,9 @@
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Activation, Dropout, Dense
+from keras.layers import Conv2D, MaxPooling2D, Activation, Dropout, Dense, Flatten
 from keras.utils import up_utils
 import keras
 import numpy as np
-from tensorflow.python import tf2
+import tensorflow
 
 classes = ["monkey", "boar", "crow"]
 num_classes = len(classes)
@@ -46,11 +46,11 @@ def model_train(X, y):
     model.add(Activation('softmax'))
 
     # optimizer
-    opt = tf2.keras.optimizers.RMSprop(lr=0.0001, decay=1e-6)
+    opt = tensorflow.keras.optimizers.RMSprop(lr=0.0001, decay=1e-6)
 
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
-    model.fit(X, y, batch_size=32, nb_epoch=50)
+    model.fit(X, y, batch_size=32, epochs=50)
 
     # モデルと重みの保存
     model.save('./animal_cnn.h5')
@@ -58,7 +58,7 @@ def model_train(X, y):
     return model
 
 def model_val(model, X, y):
-    scores = model.evaluete(X, y, verbose=1)
+    scores = model.evaluate(X, y, verbose=1)
     print('Test Loss:', scores[0])
     print('Test Accuracy:', scores[1])
 
